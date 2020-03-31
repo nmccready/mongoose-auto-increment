@@ -2,38 +2,28 @@
   "name": "@znemz/mongoose-auto-increment",
   "version": "5.1.0",
   "description": "This plugin allows you to auto-increment any field on any mongoose schema that you wish.",
+  "keywords": [
+    "auto",
+    "auto-inc",
+    "auto-increment",
+    "auto_inc",
+    "auto_increment",
+    "autoinc",
+    "autoincrement",
+    "automatic",
+    "increment",
+    "mongoose",
+    "mongoose-pureautoinc",
+    "plugin",
+    "pureautoinc"
+  ],
+  "bugs": {
+    "url": "https://github.com/codetunnel/mongoose-auto-increment/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/nmccready/mongoose-auto-increment.git"
   },
-  "dependencies": {
-    "lodash": "^4.17.4"
-  },
-  "peerDependencies": {
-    "mongoose": "^5.0.0"
-  },
-  "devDependencies": {
-    "async": "*",
-    "chai": "*",
-    "bases": "^0.2.1",
-    "mocha": "*",
-    "mongoose": "^5.0.0"
-  },
-  "keywords": [
-    "mongoose",
-    "plugin",
-    "auto-increment",
-    "auto",
-    "increment",
-    "automatic",
-    "autoincrement",
-    "auto_increment",
-    "autoinc",
-    "auto-inc",
-    "auto_inc",
-    "pureautoinc",
-    "mongoose-pureautoinc"
-  ],
   "author": {
     "name": "Alex Ford (Chevex)",
     "email": "alex.ford@codetunnel.com",
@@ -58,10 +48,46 @@
       "url": "https://github.com/tomaskavka"
     }
   ],
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha"
+    "build": "rm -rf ./dist && yarn tsc && rm -f ./dist/*.test*",
+    "prepare": "yarn sort-package-json && yarn js-common-prettierrc-clone",
+    "prepublishOnly": "yarn build",
+    "test": "rm -rf ./dist && yarn jest"
   },
-  "bugs": {
-    "url": "https://github.com/codetunnel/mongoose-auto-increment/issues"
+  "dependencies": {
+    "debug-fabulous": "^2.0.1",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.30",
+    "@types/jest": "^24.0.17",
+    "@types/mongoose": "5",
+    "@types/node": "^12",
+    "@znemz/js-common-eslint-config-react-emotion": "0.2.1",
+    "@znemz/js-common-jest-config-mono-package-clone": "^0.2.1",
+    "@znemz/js-common-jest-deps": "0.2.1",
+    "@znemz/js-common-prettierrc-clone": "0.2.1",
+    "async": "^3.2.0",
+    "bases": "^0.2.1",
+    "bluebird": "^3.7.2",
+    "eslint": "^5.3.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-react": "^7.12.4",
+    "mongoose": "^5.0.0",
+    "sort-package-json": "1.23.1",
+    "ts-jest": "^24.2.0",
+    "typescript": "^3.8.3"
+  },
+  "peerDependencies": {
+    "mongoose": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=10"
   }
 }
