@@ -24,7 +24,7 @@ import { initialize, promisedApi, plugin } from '@znemz/mongoose-auto-increment'
 
 const connection = createConnection("mongodb://localhost/myDatabase");
 
-initialize(connection);
+initialize(connection); // imagine this happens somewhere else async
 
 const bookSchema = new Schema({
     author: { type: Schema.Types.ObjectId, ref: 'Author' },
@@ -33,8 +33,13 @@ const bookSchema = new Schema({
     publishDate: Date
 });
 
-promisedApi.then(() => bookSchema.plugin(plugin, 'Book'));
-const Book = connection.model('Book', bookSchema);
+export let Book;
+
+export const BookAsync = promisedApi.then(() => {
+  bookSchema.plugin(plugin, 'Book');
+  Book = connection.model('Book', bookSchema);
+  return Book;
+});
 ````
 
 That's it. Now you can create book entities at will and they will have an `_id` field added of type `Number` and will automatically increment with each new document. Even declaring references is easy, just remember to change the reference property's type to `Number` instead of `ObjectId` if the referenced model is also using the plugin.
