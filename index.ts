@@ -126,11 +126,13 @@ export function plugin<Model = {}>(
   }
 
   // Add nextCount as both a method on documents and a static on the schema for convenience.
+  debug(() => 'nextCount');
   // @ts-ignore
   schema.method('nextCount', nextCount);
   schema.static('nextCount', nextCount);
 
   // Add resetCount as both a method on documents and a static on the schema for convenience.
+  debug(() => 'resetCount');
   // @ts-ignore
   schema.method('resetCount', resetCount);
   schema.static('resetCount', resetCount);
@@ -144,9 +146,11 @@ export function plugin<Model = {}>(
     // let ready = false;
     // @ts-ignore
     const ranOnce = doc.__maiRanOnce === true;
-
+    const d = debug.spawn('validate');
+    d(() => 'isNew?');
     // Only do this if it is a new document & the field doesn't have a value set (see http://mongoosejs.com/docs/api.html#document_Document-isNew)
     if ((doc.isNew && ranOnce === false && !doc[settings.field]) || settings.migrate) {
+      d(() => 'saveFact');
       save({ doc, settings, IdentityCounter, next })();
       /*
       If the document does not have the field we're interested in or that field
