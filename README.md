@@ -13,44 +13,48 @@
 Once you have the plugin installed it is very simple to use. Just get reference to it, initialize it by passing in your
 mongoose connection and pass `autoIncrement.plugin` to the `plugin()` function on your schema.
 
+`promisedApi` was added to allow plugin setup to be easier as connections are not always setup synchronously. Therefore your plugin setup
+can be deferred to when the autoIncrement api is actually ready. See examples below.
+
 > Note: You only need to initialize MAI once.
 
 ````js
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    autoIncrement = require('mongoose-auto-increment');
+import mongoose, { Schema } from 'mongoose';
+import { initialize, promisedApi, plugin } from '@znemz/mongoose-auto-increment';
 
-var connection = mongoose.createConnection("mongodb://localhost/myDatabase");
+const connection = createConnection("mongodb://localhost/myDatabase");
 
-autoIncrement.initialize(connection);
+initialize(connection);
 
-var bookSchema = new Schema({
+const bookSchema = new Schema({
     author: { type: Schema.Types.ObjectId, ref: 'Author' },
     title: String,
     genre: String,
     publishDate: Date
 });
 
-bookSchema.plugin(autoIncrement.plugin, 'Book');
-var Book = connection.model('Book', bookSchema);
+promisedApi.then(() => bookSchema.plugin(plugin, 'Book'));
+const Book = connection.model('Book', bookSchema);
 ````
 
 That's it. Now you can create book entities at will and they will have an `_id` field added of type `Number` and will automatically increment with each new document. Even declaring references is easy, just remember to change the reference property's type to `Number` instead of `ObjectId` if the referenced model is also using the plugin.
 
 ````js
-var authorSchema = new mongoose.Schema({
+const authorSchema = new Schema({
     name: String
 });
     
-var bookSchema = new Schema({
+const bookSchema = new Schema({
     author: { type: Number, ref: 'Author' },
     title: String,
     genre: String,
     publishDate: Date
 });
-    
-bookSchema.plugin(autoIncrement.plugin, 'Book');
-authorSchema.plugin(autoIncrement.plugin, 'Author');
+
+promisedApi.then(() => {
+  bookSchema.plugin(plugin, 'Book');
+  authorSchema.plugin(plugin, 'Author');
+});
 ````
 
 ### Want a field other than `_id`?
@@ -62,7 +66,7 @@ bookSchema.plugin(autoIncrement.plugin, { model: 'Book', field: 'bookId' });
 ### Want that field to start at a different number than zero or increment by more than one?
 
 ````js
-bookSchema.plugin(autoIncrement.plugin, {
+bookSchema.plugin(plugin, {
     model: 'Book',
     field: 'bookId',
     startAt: 100,
@@ -75,17 +79,17 @@ Your first book document would have a `bookId` equal to `100`. Your second book 
 ### Want to know the next number coming up?
 
 ````js
-var Book = connection.model('Book', bookSchema);
-Book.nextCount(function(err, count) {
+const Book = connection.model('Book', bookSchema);
+Book.nextCount((err, count) => {
 
     // count === 0 -> true
 
-    var book = new Book();
-    book.save(function(err) {
+    const book = new Book();
+    book.save((err) => {
 
         // book._id === 0 -> true
 
-        book.nextCount(function(err, count) {
+        book.nextCount((err, count) => {
 
             // count === 1 -> true
 
@@ -105,18 +109,18 @@ bookSchema.plugin(autoIncrement.plugin, {
     startAt: 100
 });
 
-var Book = connection.model('Book', bookSchema),
-    book = new Book();
+const Book = connection.model('Book', bookSchema);
+const book = new Book();
 
-book.save(function (err) {
+book.save( (err) => {
 
     // book._id === 100 -> true
 
-    book.nextCount(function(err, count) {
+    book.nextCount((err, count) => {
 
         // count === 101 -> true
 
-        book.resetCount(function(err, nextCount) {
+        book.resetCount((err, nextCount) => {
 
             // nextCount === 100 -> true
 
