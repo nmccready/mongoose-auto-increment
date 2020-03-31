@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports":true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "removeComments": true,
@@ -15,7 +15,7 @@
     "rootDir": "./",
     "outDir": "dist",
     "target": "ESNext",
-    "module": "CommonJS",
+    "module": "CommonJS"
   },
-  "exclude": ["node_modules", "**/*.spec.ts", "src/public", "dist"]
+  "exclude": ["node_modules", "**/*.test.ts", "**/*.spec.ts", "gulpfile.ts", "dist", "package.json"]
 }
